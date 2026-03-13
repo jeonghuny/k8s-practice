@@ -46,7 +46,7 @@ jobs:
 
       - name: apigateway kubectl apply
         run: |
-          kubectl apply -f ./3.msa/apigatway/k8s/depl_svc.yml
+          kubectl apply -f ./3.msa/apigateway/k8s/depl_svc.yml
           kubectl rollout restart deployment apigateway-depl -n kjh-ns
 # ============== member ==============
       - name: member build and push

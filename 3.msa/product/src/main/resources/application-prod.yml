@@ -40,3 +40,12 @@ spring:
       #카프카에서 groupid는 컨슈머 스룹을 식별하는 ID로서, 동일 한 그룹 ID를 가진 컨슈머들은 메시지를 분담해서 consumer
       group-id: product-group
 
+aws :
+  credentials:
+    access-key: xxx
+    secret-key: yyy
+  region: ap-northeast-2
+  s3:
+    bucket1: jeonghunkim-profile-image
+    bucket2: jeonghunkim-profile-image
+

@@ -82,15 +82,11 @@ public class OrderingService {
                 .memberEmail(email)
                 .build();
         orderingRepository.save(ordering);
+
         for (OrderCreateDto dto : orderCreateDtoList){
-            ProductDto productDto = productFeignClient.getProductById(dto.getProductId());
-            String endpoint1 = "http://product-service/product/detail/" + dto.getProductId();
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<String> httpEntity = new HttpEntity<>(headers);
-            ResponseEntity <ProductDto> responseEntity = restTemplate.exchange(endpoint1, HttpMethod.GET, httpEntity, ProductDto.class);
-            ProductDto product = responseEntity.getBody();
+            ProductDto product = productFeignClient.getProductById(dto.getProductId());
             if(product.getStockQuantity() < dto.getProductCount()){
-                throw new IllegalArgumentException("재고가 부족합니다.");
+                throw new IllegalArgumentException("재고가 부족합니다");
             }
             OrderDetail orderDetail = OrderDetail.builder()
                     .ordering(ordering)
@@ -98,15 +94,16 @@ public class OrderingService {
                     .productId(dto.getProductId())
                     .quantity(dto.getProductCount())
                     .build();
-            ordering.getOrderDetailList().add(orderDetail);
             orderDetailRepository.save(orderDetail);
-//            feign을 사용한 동기적 재고감소 요청
-//            productFeignClient.updateStockQuantity(dto);
-//            kafka를 활용한 비동기적 재고감소 요청
+            //        feign을 사용한 동기적 재고 감소 요청
+            //        productFeignClient.updateStockQuantity(dto);
+            //        kafka를 활용한 비동기적 재고 감소
             kafkaTemplate.send("stock-update-topic", dto);
         }
+
         return ordering.getId();
     }
+
 
     @Transactional(readOnly = true)
     public List<OrderListDto> findAll(){

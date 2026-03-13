@@ -1,0 +1,57 @@
+plugins {
+	id 'java'
+    id 'org.springframework.boot' version '3.4.8'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.ordersystem'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok' // compile Only와 유사
+
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//    db 관리 기술 : jdbc, mybatis(ibatis), jpa(spring data jpa) // 모든 기술이 jdbc기반, (jpa만 잘 정리하자)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // eureka client의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    //    msa간에 통신을 위한 openfeign의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //    재고감소 비동기처리를 위한 kafka관련 의존성추가
+    implementation 'org.springframework.kafka:spring-kafka'
+
+//  아래는 테스트코드 작성을 위한 의존성 ( 의존성 == 라이브러리 )
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// spring cloud version에 별도 설정 필요
+dependencyManagement{
+    imports{
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2024.0.0'
+    }
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

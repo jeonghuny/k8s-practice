@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  # pod의 이름은 네임스페이스내에서 유일해야함
+  name: my-nginx1
+  namespace: kim-ns  # 네임스페이스 지정시, 여기에 지정
+  labels:
+    # labels는 service의 라우팅 대상이 되는 기준. 같은 label이 붙은 여러개의 pod생성 가능.
+    app: my-nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    # pod의 포트는 내부포트를 의미하고, 프로그램자체의 포트와 동일
+    - containerPort: 80

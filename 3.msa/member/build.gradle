@@ -1,0 +1,68 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.8'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.ordersystem'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+//  spring 웹서비스(http)를 위한 기본 의존성
+    //뒤에 버전까지 명시하는 경우도 있음
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+//  getter, setter등 개발의 편의성을 증대시켜주는 각종 어노테이션 포함하는 의존성 (-> lombok 이라 부름)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok' // compile Only와 유사
+
+//    db 드라이버 : mariadb, mysql, oracle 등
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//    db 관리 기술 : jdbc, mybatis(ibatis), jpa(spring data jpa) // 모든 기술이 jdbc기반, (jpa만 잘 정리하자)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+//  값 검증을 위한 의존성 (validation)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+// 	토큰의 JSON 인코딩/디코딩, 직렬화/파싱 에 필요
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+
+//    redis 연결작업 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // eureka client의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+//    재고관련 rdb동기화작업을 이벤트기반 비동기적으로 처리하기 위한 rabbitmq의존성 추가
+//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+//  아래는 테스트코드 작성을 위한 의존성 ( 의존성 == 라이브러리 )
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// spring cloud version에 별도 설정 필요
+dependencyManagement{
+    imports{
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2024.0.0'
+    }
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

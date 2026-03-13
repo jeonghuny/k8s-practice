@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # 클러스터내에서 service명은 url주소(엔드포인트)로 사용. ex)http://my-service:포트번호
+  name: my-service
+  namespace: kim-ns
+spec:
+  type: ClusterIP
+  ports:
+  # port는 서비스의 port. targetPort는 pod내 컨테이너의 port(내부포트).
+  - port: 80
+    targetPort: 80
+    # selector.app은 pod의 label과 일치되어야 매핑이 됨.
+  selector:
+    app: my-nginx

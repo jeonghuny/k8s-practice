@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+  namespace: kjh-ns
+spec:
+  replicas: 2
+  # 아래의 label은 replicaset이 관리하는 파드를 결정하는데 사용
+  selector:
+    matchLabels:
+      app: my-nginx
+  # 아래의 label은 service에서 라우팅할 대상이 되는 label. service selector.app과 일치해야함
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: kjh-ns
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: my-nginx
